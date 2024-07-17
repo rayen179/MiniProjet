@@ -8,12 +8,12 @@
         <a href="/login"><input type="submit" name="account" class="account"  value="Have An Account"></a>
       </div>
     </div>
-    <form class="form-detail"     #signupForm="ngForm"  (submit)="createOrUpdateUser()">
+    <form class="form-detail" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
       <h2>REGISTER FORM</h2>
       <div class="form-group">
         <div class="form-row form-row-1">
           <label for="first_name">First Name</label>
-          <input class="input-text" type="text"  name="first_name" id="first_name" formControlName="email"  required>
+          <input class="input-text" type="text"  name="first_name" id="first_name" formControlName="name"  required>
 
 
         </div>
@@ -36,7 +36,7 @@
         <div class="form-row form-row-1 ">
           <label for="password">Password</label>
           <input type="password" name="password" id="password" class="input-text"  formControlName="password" required>
-          <div class="error" >Password filed is required</div>
+
         </div>
 
 
@@ -54,7 +54,7 @@
         </label>
       </div>
       <div class="form-row-last">
-        <input type="submit" name="register" class="register" value="Register">
+        <input type="submit" name="register" [disabled]="!employeeForm.valid" class="register" value="Register">
       </div>
     </form>
   </div>

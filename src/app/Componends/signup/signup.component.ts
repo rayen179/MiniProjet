@@ -1,58 +1,75 @@
 import { Component, inject } from '@angular/core';
-import { IEmployee } from '../../user';
-import { FormControl, FormGroup, FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Observable, take } from 'rxjs';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 import { HttpService } from '../../http.service';
+import { IEmployee } from '../interfaces/user';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
+  imports: [MatInputModule, MatButtonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css',
     '/src/assets/css/style.css', ],
-  imports: [CommonModule, FormsModule]
 })
 export class signupComponent {
-    userGroup = new FormGroup({
-    id: new FormControl(-1, { nonNullable: true }),
-    name: new FormControl('', { nonNullable: true }),
-    email: new FormControl('', { nonNullable: true }),
-    password: new FormControl('', { nonNullable: true }),
+  formBuilder = inject(FormBuilder);
+  httpService = inject(HttpService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
+  toaster=inject(ToastrService);
+
+  //employer form
+  employeeForm = this.formBuilder.group({
+    name: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+
   });
-  user: IEmployee[]=[];
-
-  constructor(private userService: HttpService) {
-    this.userService
-      .getAll()
-      .pipe(take(1))
-      .subscribe((users) => (this.user = users));
-  }
-  createOrUpdateUser(): void {
-    this.userGroup.value.id === -1 ? this.createUser()  : this.updateUser();
-
-  }
-  createUser(): void {
-    this.userService
-      .create(this.userGroup.value as IEmployee)
-      .pipe(take(1))
-      .subscribe((createdUser) => {
-        this.user.push(createdUser);
-        this.userGroup.reset();
+  employeeId!: number;
+  isEdit = false;
+  ngOnInit() {
+    this.employeeId = this.route.snapshot.params['id'];
+    if (this.employeeId) {
+      this.isEdit = true;
+      this.httpService.getEmployee(this.employeeId).subscribe((result) => {
+        console.log(result);
+        this.employeeForm.patchValue(result);
+        this.employeeForm.controls.email.disable();
       });
+    }
   }
-  updateUser(): void {
-    this.userService
-      .update(this.userGroup.value as IEmployee)
-      .pipe(take(1))
-      .subscribe((updatedUser) => {
-        const index = this.user.findIndex((u) => u.id === updatedUser.id);
-        this.user[index] = updatedUser;
-        this.userGroup.reset();
+  onSubmit() {
+    console.log(this.employeeForm.value);
+    const employee: IEmployee = {
+      id:0,
+      name: this.employeeForm.value.name!,
+      email: this.employeeForm.value.email!,
+      password: this.employeeForm.value.password!,
+
+    };
+    if (this.isEdit) {
+      this.httpService
+        .updateEmployee(this.employeeId, employee)
+        .subscribe(() => {
+          console.log('success');
+          this.toaster.success("Record updated sucessfully.");
+          this.router.navigateByUrl('/login');
+        });
+    } else {
+      this.httpService.createEmployee(employee).subscribe(() => {
+        console.log('success');
+        this.toaster.success("Record added sucessfully.");
+        this.router.navigateByUrl('/login');
       });
+    }
   }
-
-
 }
-

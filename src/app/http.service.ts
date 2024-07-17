@@ -1,28 +1,38 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject,signal } from '@angular/core';
-import { IEmployee } from './user';
-
-import { registerconfirm } from './_model/user.model';
-import { Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { IEmployee } from './Componends/interfaces/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
-    apiUrl = 'https://localhost:7004/';
-
-    constructor(private http: HttpClient) {}
-
-
-    getAll(): Observable<IEmployee[]> {
-      return this.http.get<IEmployee[]>(`${this.apiUrl}/api/Employee`);
-    }
-  create(user: IEmployee): Observable<IEmployee> {
-
-    return this.http.post<IEmployee>(`${this.apiUrl}/api/Employee`, user);
+  apiUrl = 'https://localhost:7004';
+  http = inject(HttpClient);
+  constructor() {}
+  createEmployee(employee: IEmployee) {
+    return this.http.post(this.apiUrl + '/api/Employee', employee);
   }
-  update(user: IEmployee): Observable<IEmployee> {
-    return this.http.put<IEmployee>(`${this.apiUrl}/api/Employee${user.id}`, user);
+  getAllEmployee() {
+    console.log('getAllEmployee', localStorage.getItem('token'));
+    return this.http.get<IEmployee[]>(this.apiUrl + '/api/Employee');
   }
+
+  getEmployee(employeeId: number) {
+    return this.http.get<IEmployee>(
+      this.apiUrl + '/api/Employee/' + employeeId
+    );
+  }
+
+  updateEmployee(employeeId: number, employee: IEmployee) {
+
+    return this.http.put<IEmployee>(
+      this.apiUrl + '/api/Employee/' + employeeId,
+      employee
+    );
+  }
+  deleteEmployee(employeeId: number) {
+    return this.http.delete(this.apiUrl + '/api/Employee/' + employeeId);
+  }
+ 
 
 }
