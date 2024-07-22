@@ -8,13 +8,23 @@
         <a href="/login"><input type="submit" name="account" class="account"  value="Have An Account"></a>
       </div>
     </div>
-    <form class="form-detail" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    <form class="form-detail"   [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
       <h2>REGISTER FORM</h2>
-      <div class="form-group">
-        <div class="form-row form-row-1">
-          <label for="first_name">First Name</label>
-          <input class="input-text" type="text"  name="first_name" id="first_name" formControlName="name"  required>
 
+        <div class="form-row">
+          <label for="first_name">First Name</label>
+          <input
+            class="input-text"
+            type="text"
+            name="first_name"
+            id="first_name"
+            formControlName="name"
+            required
+
+          >
+          <span class="error" *ngIf="employeeForm.get('name')?.errors">
+            First name is required.
+          </span>
 
         </div>
 
@@ -22,20 +32,24 @@
           <label for="last_name">Last Name</label>
           <input type="text" name="last_name" id="last_name" class="input-text" required>
         </div>-->
-      </div>
+
       <div class="form-row">
         <label for="your_email">Your Email</label>
-        <input type="text" name="your_email" id="your_email" class="input-text" formControlName="email" required pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}" >
+        <input type="text" name="email" id="your_email" required class="input-text" formControlName="email"  pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}" >
+        <span class="error" *ngIf="employeeForm.get('email')?.errors">
+          Email name is required.
+        </span>
 
       </div>
 
 
 
-
-      <div class="form-group">
-        <div class="form-row form-row-1 ">
+        <div class="form-row  ">
           <label for="password">Password</label>
-          <input type="password" name="password" id="password" class="input-text"  formControlName="password" required>
+          <input type="password" name="password"  id="password" class="input-text"  formControlName="password" required>
+          <span class="error" *ngIf="employeeForm.get('password')?.errors">
+            Password name is required.
+          </span>
 
         </div>
 
@@ -45,7 +59,7 @@
           <label for="comfirm-password">Comfirm Password</label>
           <input type="password" name="comfirm_password" id="comfirm_password" class="input-text" required>
         </div>-->
-      </div>
+
       <div class="form-checkbox">
         <label class="container"><p>I agree to the <a href="#" class="text">Terms and Conditions</a></p>
             <input type="checkbox" name="checkbox"  required>
@@ -54,7 +68,11 @@
         </label>
       </div>
       <div class="form-row-last">
-        <input type="submit" name="register" [disabled]="!employeeForm.valid" class="register" value="Register">
+
+        <div class="form-row-last">
+          <input type="submit" name="register" (click)="showSuccess()" class="register" value="Register">
+        </div>
+
       </div>
     </form>
   </div>

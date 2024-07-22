@@ -4,7 +4,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { signupComponent } from './Componends/signup/signup.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -13,6 +13,7 @@ import { signupComponent } from './Componends/signup/signup.component';
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
 
     signupComponent,
     AppComponent,

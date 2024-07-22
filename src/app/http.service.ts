@@ -6,11 +6,16 @@ import { IEmployee } from './Componends/interfaces/user';
   providedIn: 'root',
 })
 export class HttpService {
+
   apiUrl = 'https://localhost:7004';
   http = inject(HttpClient);
+  toaster: any;
   constructor() {}
+  showSuccess() {
+    this.toaster.success('Record added sucessfully.');
+  }
   createEmployee(employee: IEmployee) {
-    return this.http.post(this.apiUrl + '/api/Employee', employee);
+    return this.http.post(this.apiUrl + '/api/Employee/register/', employee);
   }
   getAllEmployee() {
     console.log('getAllEmployee', localStorage.getItem('token'));
@@ -33,6 +38,6 @@ export class HttpService {
   deleteEmployee(employeeId: number) {
     return this.http.delete(this.apiUrl + '/api/Employee/' + employeeId);
   }
- 
+
 
 }

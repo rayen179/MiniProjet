@@ -11,16 +11,26 @@ import { HttpService } from '../../http.service';
 import { IEmployee } from '../interfaces/user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [MatInputModule, MatButtonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule,MatInputModule, MatButtonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css',
     '/src/assets/css/style.css', ],
 })
 export class signupComponent {
+  constructor(private toastr: ToastrService) {}
+
+  showSuccess() {
+    this.toaster.success('Record added sucessfully.');
+  }
+
+
   formBuilder = inject(FormBuilder);
   httpService = inject(HttpService);
   router = inject(Router);
@@ -44,32 +54,35 @@ export class signupComponent {
         console.log(result);
         this.employeeForm.patchValue(result);
         this.employeeForm.controls.email.disable();
+
       });
     }
   }
   onSubmit() {
     console.log(this.employeeForm.value);
     const employee: IEmployee = {
-      id:0,
+      id: 0,
       name: this.employeeForm.value.name!,
       email: this.employeeForm.value.email!,
       password: this.employeeForm.value.password!,
-
     };
-    if (this.isEdit) {
-      this.httpService
-        .updateEmployee(this.employeeId, employee)
-        .subscribe(() => {
+
+    if (this.employeeForm.valid) {
+      this.httpService.createEmployee(employee).subscribe(
+        () => {
           console.log('success');
-          this.toaster.success("Record updated sucessfully.");
-          this.router.navigateByUrl('/login');
-        });
-    } else {
-      this.httpService.createEmployee(employee).subscribe(() => {
-        console.log('success');
-        this.toaster.success("Record added sucessfully.");
-        this.router.navigateByUrl('/login');
-      });
+          this.router.navigateByUrl('/feedback');
+          // Uncomment the line below if you want to show a success message
+          // this.toaster.success("Record added successfully.");
+        },
+        (err) => {
+          alert(err?.error?.message || 'An error occurred');
+        }
+      );
     }
   }
-}
+
+
+
+  }
+

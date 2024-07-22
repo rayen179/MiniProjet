@@ -1,7 +1,12 @@
 # Front
-
+<div class="page-content">
+  <div class="form-v4-content">
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.4.
 
+
+
+
+required pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}"
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
