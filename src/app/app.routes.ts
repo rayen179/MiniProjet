@@ -13,6 +13,7 @@ export const routes: Routes = [
   {title: "signup", path:'' , component : signupComponent },
 
   {title: "Feedback", path:'feedback' , component : FedbackComponent },
+  
 
 
   //{title: "RECRUITS | Login", path:'login' , component: LoginComponent},

@@ -12,7 +12,7 @@ import { IEmployee } from '../interfaces/user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-
+import { error } from 'console';
 
 
 @Component({
@@ -24,11 +24,13 @@ import { CommonModule } from '@angular/common';
     '/src/assets/css/style.css', ],
 })
 export class signupComponent {
+  error=false;
   constructor(private toastr: ToastrService) {}
 
   showSuccess() {
     this.toaster.success('Record added sucessfully.');
   }
+
 
 
   formBuilder = inject(FormBuilder);
@@ -71,13 +73,17 @@ export class signupComponent {
       this.httpService.createEmployee(employee).subscribe(
         () => {
           console.log('success');
+          this.toaster.success('Record add sucessfully');
           this.router.navigateByUrl('/feedback');
           // Uncomment the line below if you want to show a success message
-          // this.toaster.success("Record added successfully.");
+
         },
-        (err) => {
-          alert(err?.error?.message || 'An error occurred');
+        (error)=>{
+            console.log(error)
+            this.error=true;
         }
+
+
       );
     }
   }

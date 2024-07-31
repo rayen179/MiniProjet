@@ -37,10 +37,13 @@
         <label for="your_email">Your Email</label>
         <input type="text" name="email" id="your_email" required class="input-text" formControlName="email"  pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}" >
         <span class="error" *ngIf="employeeForm.get('email')?.errors">
+
           Email name is required.
         </span>
+        <span class="error" *ngIf="error==true">mail Exist</span>
 
       </div>
+
 
 
 
@@ -70,7 +73,7 @@
       <div class="form-row-last">
 
         <div class="form-row-last">
-          <input type="submit" name="register" (click)="showSuccess()" class="register" value="Register">
+          <input type="submit" name="register"  class="register" value="Register">
         </div>
 
       </div>
